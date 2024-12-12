@@ -3,33 +3,32 @@
 
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
-import type { IError } from "./ValidationErrorConsole";
+import {useCallback, useEffect, useMemo, useState} from "react";
+import type {IError} from "./ValidationErrorConsole";
 import ValidationErrorConsole from "./ValidationErrorConsole";
 import EditorTopBar from "../EditorTopBar";
-import { useEditorRef, useEditorDidMount, useMonacoRef, useViewMode } from "~/contexts/EditorContext";
-import MonacoEditor, { loader, type OnChange } from "@monaco-editor/react";
-import { ReactFlowProvider } from "reactflow";
+import {useEditorDidMount, useEditorRef, useMonacoRef, useViewMode} from "~/contexts/EditorContext";
+import MonacoEditor, {type OnChange} from "@monaco-editor/react";
+import {ReactFlowProvider} from "reactflow";
 import Flow from "../react-flow/ReactFlow";
-import { useUrlState } from "~/lib/urlState/client/useUrlState";
+import {useUrlState} from "~/lib/urlState/client/useUrlState";
 import AppHeader from "../AppHeader";
 import WelcomeModal from "../welcome-modal/WelcomeModal";
 import {
 	useServerSideValidationEnabled,
 	validateOtelCollectorConfigurationAndSetMarkers,
 } from "~/components/monaco-editor/otelCollectorConfigValidation";
-import { editorBinding } from "~/components/monaco-editor/editorBinding";
-import { AppFooter } from "~/components/AppFooter";
-import { AutoSizer } from "~/components/AutoSizer";
-import { ResizeBar } from "~/components/monaco-editor/ResizeBar";
-import { Fira_Code } from "next/font/google";
-import { useClerk } from "@clerk/nextjs";
-import { PanelLeftOpen } from "lucide-react";
-import { IconButton } from "~/components/icon-button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
-import { track } from "@vercel/analytics";
-import { useServerSideValidation } from "../validation/useServerSideValidation";
-import { selectConfigType } from "./parseYaml";
+import {editorBinding} from "~/components/monaco-editor/editorBinding";
+import {AppFooter} from "~/components/AppFooter";
+import {AutoSizer} from "~/components/AutoSizer";
+import {ResizeBar} from "~/components/monaco-editor/ResizeBar";
+import {Fira_Code} from "next/font/google";
+import {PanelLeftOpen} from "lucide-react";
+import {IconButton} from "~/components/icon-button";
+import {Tooltip, TooltipContent, TooltipTrigger} from "~/components/tooltip";
+import {track} from "@vercel/analytics";
+import {useServerSideValidation} from "../validation/useServerSideValidation";
+import {selectConfigType} from "./parseYaml";
 
 const firaCode = Fira_Code({
 	display: "swap",
@@ -47,7 +46,6 @@ export default function Editor({ locked, setLocked }: { locked: boolean; setLock
 	const [openDialog, setOpenDialog] = useState(savedOpenModal ? !savedOpenModal : true);
 	const [{ config }, getLink] = useUrlState([editorBinding]);
 	const [currentConfig, setCurrentConfig] = useState<string>(config);
-	const clerk = useClerk();
 	const serverSideValidationResult = useServerSideValidation();
 	const isServerValidationEnabled = useServerSideValidationEnabled();
 	const onWidthChange = useCallback((newWidth: number) => {
@@ -109,35 +107,6 @@ export default function Editor({ locked, setLocked }: { locked: boolean; setLock
 		}
 	}, [onChangeConfig, currentConfig, config]);
 
-	useEffect(() => {
-		if (clerk.loaded) {
-			loader.init().then((monaco) => {
-				monaco.editor.defineTheme("OTelBin", {
-					base: "vs-dark",
-					inherit: true,
-					rules: [
-						{ token: "comment", foreground: "#6D737D" },
-						{ token: "string.yaml", foreground: "#38BDF8" },
-						{ token: "number.yaml", foreground: "#38BDF8" },
-						{ token: "keyword.operator.assignment", foreground: "#38BDF8" },
-					],
-					colors: {
-						"editor.background": "#151721",
-						"editorLineNumber.foreground": "#6D737D",
-						"editorLineNumber.activeForeground": "#F9FAFB",
-						"editorCursor.foreground": "#F9FAFB",
-						"editor.selectionBackground": "#30353D",
-						"editor.selectionHighlightBackground": "#30353D",
-						"editor.hoverHighlightBackground": "#30353D",
-						"editor.lineHighlightBackground": "#30353D",
-						"editor.lineHighlightBorder": "#30353D",
-					},
-				});
-				monaco.editor.setTheme("OTelBin");
-			});
-		}
-	}, [clerk.loaded]);
-
 	function calculateViewWidth(viewMode: string, width: number) {
 		switch (viewMode) {
 			case "code":
@@ -164,7 +133,7 @@ export default function Editor({ locked, setLocked }: { locked: boolean; setLock
 						>
 							<EditorTopBar config={currentConfig} font={firaCode} />
 							<div className={`h-full w-full shrink grow ${firaCode.className}`}>
-								{clerk.loaded && (
+								{(
 									<AutoSizer>
 										{({ width, height }) => (
 											<MonacoEditor

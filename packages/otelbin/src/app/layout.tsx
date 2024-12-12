@@ -3,15 +3,13 @@
 
 import "./globals.css";
 
-import { Analytics } from "@vercel/analytics/react";
-import { ClerkProvider } from "@clerk/nextjs";
-import { type PropsWithChildren } from "react";
-import { type Metadata } from "next";
-import { TooltipProvider } from "~/components/tooltip";
-import { Toaster } from "~/components/toaster";
-import { dark } from "@clerk/themes";
-import { Inter } from "next/font/google";
-import { cn } from "~/lib/utils";
+import {Analytics} from "@vercel/analytics/react";
+import {type PropsWithChildren} from "react";
+import {type Metadata} from "next";
+import {TooltipProvider} from "~/components/tooltip";
+import {Toaster} from "~/components/toaster";
+import {Inter} from "next/font/google";
+import {cn} from "~/lib/utils";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,14 +20,6 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: PropsWithChildren) {
 	return (
-		<ClerkProvider
-			appearance={{
-				baseTheme: dark,
-				variables: {
-					colorPrimary: "#6366f1",
-				},
-			}}
-		>
 			<html lang="en" className="dark overflow-hidden">
 				<head>
 					<meta name="viewport" content="initial-scale=1" />
@@ -45,6 +35,5 @@ export default function RootLayout({ children }: PropsWithChildren) {
 					<Analytics />
 				</body>
 			</html>
-		</ClerkProvider>
 	);
 }

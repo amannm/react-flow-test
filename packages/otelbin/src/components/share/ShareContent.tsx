@@ -1,36 +1,32 @@
 // SPDX-FileCopyrightText: 2023 Dash0 Inc.
 // SPDX-License-Identifier: Apache-2.0
 
-import { SignInButton, useAuth } from "@clerk/nextjs";
-import { Button } from "~/components/button";
-import { ArrowDownToLine, Copy, Loader2, LogIn } from "lucide-react";
-import { useUrlState } from "~/lib/urlState/client/useUrlState";
-import { editorBinding } from "~/components/monaco-editor/editorBinding";
-import { UrlCopy } from "~/components/share/UrlCopy";
-import { DownloadImageButton } from "~/components/share/DownloadImageButton";
-import { track } from "@vercel/analytics";
-import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
-import { IconButton } from "~/components/icon-button";
-import { useToast } from "~/components/use-toast";
-import { fetcher } from "~/lib/fetcher";
+import {Button} from "~/components/button";
+import {ArrowDownToLine, Copy, Loader2} from "lucide-react";
+import {useUrlState} from "~/lib/urlState/client/useUrlState";
+import {editorBinding} from "~/components/monaco-editor/editorBinding";
+import {UrlCopy} from "~/components/share/UrlCopy";
+import {DownloadImageButton} from "~/components/share/DownloadImageButton";
+import {track} from "@vercel/analytics";
+import {Tooltip, TooltipContent, TooltipTrigger} from "~/components/tooltip";
+import {IconButton} from "~/components/icon-button";
+import {useToast} from "~/components/use-toast";
+import {fetcher} from "~/lib/fetcher";
 import useSWRImmutable from "swr/immutable";
-import { useState } from "react";
+import {useState} from "react";
 
 export function ShareContent() {
 	const { toast } = useToast();
 	const [{ config }, getLink] = useUrlState([editorBinding]);
 	let fullURL = window.location.origin + getLink({});
-	const { isSignedIn } = useAuth();
 	const [loadedImgUrl, setLoadedImgUrl] = useState<string | undefined>(undefined);
 
 	const { data } = useSWRImmutable<{ shortLink: string; imgURL: string }>(
-		isSignedIn
-			? {
+		{
 					url: `/s/new`,
 					method: "POST",
 					body: fullURL,
-				}
-			: undefined,
+		},
 		fetcher
 	);
 
@@ -40,16 +36,8 @@ export function ShareContent() {
 		<div>
 			<p className="weight mx-4 mt-3 mb-2 text-sm font-normal text-default">Share the config with others.</p>
 			<UrlCopy url={fullURL} />
-			{!isSignedIn && (
-				<SignInButton mode="modal" afterSignInUrl="/restore">
-					<Button size="xs" variant="cta" className="mx-4 mt-3">
-						<LogIn className="mr-1" />
-						Sign in to create short URL
-					</Button>
-				</SignInButton>
-			)}
 
-			{!data?.shortLink && isSignedIn && (
+			{!data?.shortLink && (
 				<em className="mx-4 mt-3 mb-0 text-sm font-normal text-default flex items-center gap-2">
 					<Loader2 className="motion-safe:animate-spin" size={16} /> Creating short URL…
 				</em>

@@ -1,17 +1,8 @@
 // SPDX-FileCopyrightText: 2023 Dash0 Inc.
 // SPDX-License-Identifier: Apache-2.0
 
-import { authMiddleware } from "@clerk/nextjs";
-import { type NextRequest, NextResponse } from "next/server";
-import { isBotRequest } from "./lib/utils";
-
-export default authMiddleware({
-	apiRoutes: ["/s/new"],
-	publicRoutes: (req) => req.nextUrl.pathname !== "/s/new",
-	afterAuth(_, request: NextRequest) {
-		return handleShortLinkRequest(request);
-	},
-});
+import {type NextRequest, NextResponse} from "next/server";
+import {isBotRequest} from "./lib/utils";
 
 export const config = {
 	matcher: ["/s/(.*)"],

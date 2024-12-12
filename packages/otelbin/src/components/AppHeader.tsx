@@ -2,10 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import Logo from "./assets/svg/otelbin_logo_white.svg";
-import { LogIn } from "lucide-react";
-import { Share } from "~/components/share/Share";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
-import { Button } from "~/components/button";
+import {Share} from "~/components/share/Share";
 import ValidationType from "./validation-type/ValidationType";
 
 export default function AppHeader() {
@@ -23,24 +20,6 @@ export default function AppHeader() {
 			</div>
 			<div className="flex gap-x-2">
 				<Share />
-
-				<SignedIn>
-					<UserButton
-						afterSignOutUrl="/restore"
-						appearance={{
-							elements: {
-								avatarBox: "w-6 h-6",
-							},
-						}}
-					/>
-				</SignedIn>
-				<SignedOut>
-					<SignInButton mode="modal" afterSignInUrl="/restore">
-						<Button size="xs">
-							<LogIn />
-						</Button>
-					</SignInButton>
-				</SignedOut>
 			</div>
 		</div>
 	);
